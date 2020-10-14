@@ -1,0 +1,149 @@
+<mat-card class="center-card verification-content">
+
+  <mat-card-header class="verification-content-header">
+    <mat-card-title>
+      <p class="header-title">
+        {{ type == 'mobile' ? 'Mobile' : 'E-mail' }} Verification
+      </p>
+    </mat-card-title>
+  </mat-card-header>
+
+  <mat-card-content>
+
+    <ng-container *ngIf="type =='email'">
+
+      <ng-container *ngIf="!isVerificationCodeSent">
+
+        <div class="verification-text-wrapper">
+          <img src="assets/icons/svg/verify-email.svg">
+          <p class="verification-text"> A 6-digit-one-time code will be sent <br> to your email </p>
+        </div>
+
+        <div class="content">
+          <p class="content-text"> {{ currentUser.profile?.email || currentUser.profile?.login }} </p>
+        </div>
+
+        <div class="verification-actions">
+          <button mat-raised-button class="btn-block send-code-btn" (click)="sendCode('email')">
+            <span>Send me the code</span>
+          </button>
+          <!-- <button mat-raised-button class="btn-block cancel-btn" [routerLink]="'/user/profile'"> -->
+          <button mat-raised-button class="btn-block cancel-btn" (click)="cancel()">
+            <span>Cancel</span>
+          </button>
+        </div>
+
+      </ng-container>
+
+      <ng-container *ngIf="isVerificationCodeSent">
+
+        <div class="verification-text-wrapper">
+          <p class="verification-text"> Enter the 6-digit code sent to <br> {{ currentUser.profile?.email || currentUser.profile?.login }} </p>
+        </div>
+
+        <div class="content">
+          <form [formGroup]="verificationFormGroup">
+            <ng-otp-input
+              (onInputChange)="onOtpChange($event)"
+              [config]="{ length: 6, allowNumbersOnly: true }">
+            </ng-otp-input>
+          </form>
+
+          <p class="content-link hand" (click)="sendCode('email')"> Resend code via Email </p>
+
+        </div>
+
+        <div class="verification-actions">
+          <button mat-raised-button class="btn-block send-code-btn" (click)="submitCode('email')">
+            <span>Submit</span>
+          </button>
+          <!-- <button mat-raised-button class="btn-block cancel-btn" [routerLink]="'/mfa'"> -->
+          <button mat-raised-button class="btn-block cancel-btn" (click)="cancel()">
+            <span>Cancel</span>
+          </button>
+        </div>
+
+      </ng-container>
+
+    </ng-container>
+
+    <ng-container *ngIf="type =='mobile'">
+
+      <ng-container *ngIf="!isVerificationCodeSent">
+
+        <div class="verification-text-wrapper">
+          <img src="assets/icons/svg/verify-mobile.svg">
+          <p class="verification-text"> A 6-digit-one-time code will be sent <br> to your mobile number </p>
+        </div>
+
+        <div class="content">
+          <p class="content-text"> {{ currentUser.profile?.mobilePhone || '' }} </p>
+        </div>
+
+        <div class="verification-actions">
+          <button mat-raised-button class="btn-block send-code-btn" (click)="sendCode('mobile')">
+            <span>Send me the code</span>
+          </button>
+          <button mat-raised-button class="btn-block cancel-btn" [routerLink]="'/user/profile'">
+            <span>Cancel</span>
+          </button>
+        </div>
+
+      </ng-container>
+
+      <ng-container *ngIf="isVerificationCodeSent">
+
+        <div class="verification-text-wrapper">
+          <p class="verification-text"> Enter the 6-digit code sent to <br> {{ mobileFactor.profile?.phoneNumber }} </p>
+        </div>
+
+        <div class="content">
+          <form [formGroup]="verificationFormGroup">
+            <ng-otp-input
+              (onInputChange)="onOtpChange($event)"
+              [config]="{ length: 6, allowNumbersOnly: true }">
+            </ng-otp-input>
+          </form>
+
+          <p class="content-link hand" (click)="sendCode('mobile')"> Resend code via SMS </p>
+        </div>
+
+        <div class="verification-actions">
+          <button mat-raised-button
+                  class="btn-block send-code-btn"
+                  (click)="submitCode('mobile')"
+                  [disabled]="!verificationFormGroup.valid"
+                  [ngStyle]="{ 'cursor' : verificationFormGroup.valid ? '' : 'not-allowed' }">
+            <span>Submit</span>
+          </button>
+          <button mat-raised-button class="btn-block cancel-btn" [routerLink]="'/mfa'">
+            <span>Cancel</span>
+          </button>
+        </div>
+
+      </ng-container>
+
+    </ng-container>
+
+  </mat-card-content>
+
+</mat-card>
+
+<swal #unregister imageUrl="{{ alertConfirmLink }}">
+
+  <div *swalPortal="swalTargets.title">
+    <p> Unregister </p>
+  </div>
+  <div *swalPortal="swalTargets.content">
+    <div class="mb-1">
+      <p> Are you sure you want to <br> unregister your account? </p>
+    </div>
+    <button class="custom-swal-confirm-button" mat-raised-button (click)="confirmUnregister()">
+      <span >Yes</span>
+    </button>
+    <button class="btn-block cancel-btn custom-swal-dismiss-button" mat-raised-button (click)="unregister.dismiss()">
+      <span>Cancel</span>
+    </button>
+  </div>
+
+</swal>

@@ -1,0 +1,136 @@
+$dark-gray: #6E6E6E;
+$lighter-gray: #CCCCCC;
+$light-gray: #919191;
+$light-blue: #18A7DF;
+$blue: #0060A7;
+$dark-blue: #005687;
+$white: #FFFFFF;
+$black: #393939;
+
+%font-normal {
+  font-style: normal;
+  font-weight: normal;
+}
+
+.center-card {
+  width: 450px;
+  height: 700px;
+
+  left:0;
+  right:0;
+  top:0;
+  bottom:0;
+
+  /* overflow: auto; */
+  overflow: hidden;
+  position: fixed;
+  margin: auto;
+	max-width: 600px;
+	max-height: 700px;
+}
+
+.profile-content {
+
+  .profile-content-header {
+    // margin-bottom: 1em;
+
+    .header-title {
+      color: $dark-blue;
+      font-size: 24px;
+      line-height: 49px;
+      text-align: center;
+    }
+  }
+
+  .profile {
+    .mat-subheader {
+      padding-top: 0px !important;
+      justify-content: center;
+      font-size: 13px;
+      margin-bottom: -20px;
+    }
+
+    .mat-line {
+      text-align: center;
+      font-size: 14px !important;
+    }
+  }
+
+  ::ng-deep .mat-subheader {
+    padding-bottom: 0px !important;
+
+    @extend %font-normal;
+    color: $dark-gray;
+    font-size: 11px;
+  }
+
+  ::ng-deep .mat-line {
+    @extend %font-normal;
+
+    font-size: 13px !important;
+  }
+
+  .account-settings {
+
+    .linked-account-name {
+      font-size: 13px;
+      font-style: normal;
+      width: 200px;
+      word-break: break-all;
+    }
+
+    .unlink-icon {
+      width: 40px;
+    }
+  }
+
+}
+
+.d-block {
+  display: block !important;
+}
+
+.btn-block {
+  width: 100%;
+}
+
+:host ::ng-deep .mat-card-header-text {
+  margin: 0 auto !important;
+}
+
+.field-icon {
+  color: $light-gray;
+}
+
+.hand {
+  cursor: pointer;
+}
+
+.custom-swal-confirm-button {
+  border-radius: 40px;
+  border: 1px solid #0060A7;
+  width: 100%;
+  font-weight: normal;
+  height: 48px;
+  margin-bottom: 10px;
+  background-color: #0060A7;
+  color: #FFFFFF;
+}
+
+.custom-swal-dismiss-button {
+  border-radius: 40px;
+  border: 1px solid #919191;
+  width: 100%;
+  font-weight: normal;
+  height: 48px;
+  margin-bottom: 10px;
+  background-color: #FFFFFF;
+}
+
+.mb-2 {
+  margin-bottom: 2em;
+}
+
+.mb-1 {
+  margin-bottom: 1em;
+}

@@ -1,0 +1,127 @@
+$dark-gray: #6E6E6E;
+$lighter-gray: #CCCCCC;
+$light-gray: #919191;
+$light-blue: #18A7DF;
+$blue: #0060A7;
+$dark-blue: #005687;
+$white: #FFFFFF;
+$black: #393939;
+
+%font-normal {
+  font-style: normal;
+  font-weight: normal;
+}
+
+%font-bold {
+  font-style: normal;
+  font-weight: bold;
+}
+
+.center-card {
+  width: 400px;
+  height: 600px;
+
+  left:0;
+  right:0;
+  top:0;
+  bottom:0;
+
+  /* overflow: auto; */
+  overflow: hidden;
+  position: fixed;
+  margin: auto;
+	max-width: 400px;
+	max-height: 600px;
+}
+
+.enrollment-content {
+
+  .enrollment-content-header {
+    margin-bottom: 1em;
+
+    .header-title {
+      color: $dark-blue;
+      font-size: 24px;
+      line-height: 49px;
+      text-align: center;
+    }
+
+  }
+
+  .enrollment-text-wrapper, .enrollment-verification-text-wrapper {
+    margin-bottom: 2em;
+    text-align: center;
+
+    .enrollment-text, .enrollment-verification-text-wrapper {
+      color: $dark-gray;
+      line-height: 19px;
+      font-size: 16px;
+      margin-bottom: 1em;
+      text-align: center;
+    }
+
+    img {
+      margin-bottom: 1em;
+    }
+
+  }
+
+  .content {
+    margin-bottom: 2em;
+
+    ::ng-deep .otp-input {
+      border: 1.55px solid #009681 !important;
+      color: #4F4F4F !important;
+    }
+
+    .content-text {
+      font-size: 15px;
+      text-align: center;
+      @extend %font-bold;
+    }
+
+    .content-link {
+      margin-top: 2em;
+      color: $light-blue;
+      text-align: center;
+      @extend %font-normal;
+    }
+  }
+
+  .enrollment-actions, .enrollment-verification-actions {
+
+    .send-code-btn, .cancel-btn {
+      font-weight: normal;
+      line-height: 22px;
+      height: 48px;
+      border-radius: 40px;
+      margin-bottom: 10px;
+      background-color: $blue;
+    }
+
+    .send-code-btn {
+      color: $white;
+    }
+
+    .cancel-btn {
+      background-color: $white;
+      color: $dark-gray;
+    }
+  }
+}
+
+:host ::ng-deep .mat-card-header-text {
+  margin: 0 auto !important;
+}
+
+.d-block {
+  display: block !important;
+}
+
+.btn-block {
+  width: 100%;
+}
+
+.hand {
+  cursor: pointer;
+}

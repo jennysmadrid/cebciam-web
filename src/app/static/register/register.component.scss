@@ -1,0 +1,105 @@
+$dark-gray: #6E6E6E;
+$lighter-gray: #CCCCCC;
+$light-gray: #919191;
+$light-blue: #18A7DF;
+$blue: #0060A7;
+$dark-blue: #005687;
+$white: #FFFFFF;
+$black: #393939;
+
+%font-normal {
+  font-style: normal;
+  font-weight: normal;
+}
+
+
+.center-card {
+  width: 450px;
+  height: 400px;
+
+  left:0;
+  right:0;
+  top:0;
+  bottom:0;
+
+  /* overflow: auto; */
+  overflow: hidden;
+  position: fixed;
+  margin: auto;
+	max-width: 600px;
+	max-height: 400px;
+}
+
+
+.register-content {
+
+  .welcome-text {
+    color: $dark-gray;
+    line-height: 19px;
+    font-size: 16px;
+    margin-bottom: 1em;
+  }
+
+  .register-account {
+    .register-btn {
+      font-weight: normal;
+      line-height: 22px;
+      height: 48px;
+      border-radius: 40px;
+      background-color: $blue;
+    }
+
+    .register-account-text {
+      @extend %font-normal;
+      color: $white;
+      font-size: 16px;
+      line-height: 22px;
+    }
+  }
+
+  .security-question {
+
+    ::ng-deep .mat-select-value {
+      @extend %font-normal;
+      color: $black;
+    }
+
+    ::ng-deep .mat-select-value-text {
+      @extend %font-normal;
+      color: $black;
+    }
+
+  }
+
+  .login-account {
+    position: relative;
+    margin-top: 1em;
+    margin-bottom: 4em;
+
+    .login-account-text-wrapper {
+      position: relative;
+      width: 210px;
+      margin: 0 auto;
+
+      .login-account-text {
+        color: $dark-gray;
+        margin: 0 auto;
+        a {
+          @extend %font-normal;
+          color: $light-blue;
+          text-decoration: none;
+        }
+      }
+    }
+
+  }
+
+}
+
+.d-block {
+  display: block !important;
+}
+
+.btn-block {
+  width: 100%;
+}

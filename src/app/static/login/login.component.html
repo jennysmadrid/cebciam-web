@@ -1,0 +1,80 @@
+<mat-card class="center-card login-content">
+
+  <mat-card-header class="login-content-header">
+    <mat-card-title>
+      <p class="project-name"> CEB CIAM </p>
+      <p class="project-mini-name"> Customer Identify and <span> Access Management </span> </p>
+    </mat-card-title>
+  </mat-card-header>
+
+  <mat-card-content>
+    <p class="welcome-text">Welcome. Please enter your username and password</p>
+    <form [formGroup]="loginFormGroup">
+      <mat-form-field class="d-block" appearance="outline">
+        <mat-label>E-mail</mat-label>
+        <input matInput type="text" formControlName="username">
+        <mat-icon matSuffix svgIcon="inputEmail"></mat-icon>
+      </mat-form-field>
+
+      <mat-form-field class="d-block password-field" appearance="outline">
+        <mat-label>Password</mat-label>
+        <input matInput type="password" formControlName="password">
+        <mat-icon matSuffix svgIcon="inputPassword"></mat-icon>
+      </mat-form-field>
+
+    </form>
+
+      <div class="forgot-password">
+        <a class="forgot-password-text" [routerLink]="'/forgot-password'">
+        Forgot password
+        </a>
+      </div>
+
+      <div class="account-login">
+        <button
+        mat-raised-button
+        class="btn-block login-btn"
+        (click)="login()"
+        [disabled]="!loginFormGroup.valid">
+        <span class="login-text">Sign In</span>
+      </button>
+      </div>
+
+      <div class="register-account">
+        <span class="register-account-text"> New to CEB CIAM? <a [routerLink]="'/register'">Sign Up Here</a> </span>
+      </div>
+
+      <div class="divider">
+        <span>or</span>
+      </div>
+
+      <div class="social-login">
+
+        <button mat-raised-button
+                class="btn-block social-btn"
+                #googleLoginRef
+                (click)="loginWithSocial('facebook')">
+          <mat-icon svgIcon="facebookLogo"></mat-icon>
+          <span class="btn-text">Sign in with Facebook</span>
+        </button>
+
+        <button mat-raised-button
+          class="btn-block social-btn"
+          #googleLoginRef
+          (click)="loginWithSocial('google')">
+          <mat-icon svgIcon="googleLogo"></mat-icon>
+          <span class="btn-text">Sign in with Google</span>
+        </button>
+
+        <button mat-raised-button
+          class="btn-block social-btn"
+          (click)="loginWithGetGoModal()">
+          <mat-icon svgIcon="getgoLogo"></mat-icon>
+          <span class="btn-text">Sign in with GetGo</span>
+        </button>
+
+      </div>
+
+  </mat-card-content>
+
+</mat-card>

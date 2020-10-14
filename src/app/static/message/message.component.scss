@@ -1,0 +1,129 @@
+$violet: #744eb5;
+$orange: #e84a36;
+
+h1 {
+  margin: 0 0 10px;
+}
+
+span {
+  &.brand {
+    color: $violet;
+    font-weight: 600;
+  }
+}
+
+.modal-container {
+  height: auto;
+  overflow: hidden;
+
+  .d-block {
+    width: 100%;
+
+    .alert {
+      &.alert-danger {
+        position: absolute;
+        padding: 0;
+        margin: 18px -8px;
+        font-size: .786em;
+        color: $orange;
+        font-style: normal;
+      }
+    }
+  }
+
+  .account-login {
+    button {
+      width: 100%;
+      border-radius: 10px;
+      background: $violet;
+      color: #fff;
+      margin: 5px auto 0;
+      justify-content: center;
+      display: flex;
+      cursor: pointer;
+      font-size: 20px;
+      padding: 5px;
+    }
+  }
+
+  .action-wrapper {
+    display: flex;
+
+    .forgot-password {
+      text-align: left;
+      margin: 8px 0;
+      width: 50%;
+
+      a {
+        text-decoration: none;
+      }
+    }
+
+    .account-signup {
+      margin: 10px 0;
+      width: 50%;
+      text-align: right;
+
+      .signup-btn {
+        text-align: center;
+        margin: 15px auto 0px;
+      }
+
+      a {
+        text-decoration: none;
+      }
+    }
+  }
+
+  .modal-close {
+    padding: 0;
+    display: flex;
+    align-items: end;
+
+    button {
+      margin: 0 auto;
+      background: transparent;
+      box-shadow: none;
+      color: $violet;
+    }
+  }
+
+  .mat-icon {
+    color: #b1b1b1;
+    cursor: pointer;
+  }
+}
+
+.close-button {
+  float: right;
+  top: -18px;
+  right: -18px;
+
+   &:active, &:focus, &:hover {
+     background: #fff;
+   }
+
+  .close-icon {
+    transition: 1s ease-in-out;
+    background: #fff;
+
+    &:hover {
+      transform: rotate(180deg);
+    }
+  }
+}
+
+.error-message {
+  margin-top: 20px;
+  margin-bottom: 1rem;
+  border-style: solid;
+  border-color: #f29c92;
+  background: #f8c6bf;
+  font-size: 0.857em;
+  color: #721c24;
+  background-color: #f8d7da;
+  border-color: #f5c6cb;
+  padding: .75rem 1.25rem;
+  border: 1px solid transparent;
+  border-radius: .25rem;
+}

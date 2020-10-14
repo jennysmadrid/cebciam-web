@@ -1,0 +1,174 @@
+<mat-card class="center-card profile-content">
+
+  <mat-card-header class="profile-content-header">
+    <mat-card-title>
+      <p class="header-title"> My Profile </p>
+    </mat-card-title>
+  </mat-card-header>
+
+  <mat-card-content>
+
+    <mat-list class="profile">
+
+      <div mat-subheader>First Name</div>
+      <mat-list-item>
+        <div mat-line> {{ currentUser?.profile.firstName }} </div>
+      </mat-list-item>
+
+      <div mat-subheader>Last Name</div>
+      <mat-list-item>
+        <div mat-line> {{ currentUser?.profile.lastName }} </div>
+      </mat-list-item>
+
+      <div mat-subheader>Email</div>
+      <mat-list-item>
+        <div mat-line> {{ currentUser?.profile.login || currentUser?.profile.email }} </div>
+      </mat-list-item>
+
+    </mat-list>
+
+    <mat-list class="account-settings">
+
+      <div mat-subheader>Account Settings</div>
+      <mat-list-item *ngIf="!currentUserLinkedSocials">
+        <!-- <div mat-line class="hand" [routerLink]="'/user/edit-profile'" *ngIf="currentUserLinkedSocials"> Edit Profile </div> -->
+        <div mat-line class="hand" [routerLink]="'/mfa/edit-profile'"> Edit Profile </div>
+        <mat-divider></mat-divider>
+      </mat-list-item>
+      <mat-list-item *ngIf="!currentUserLinkedSocials">
+        <!-- <div mat-line class="hand" [routerLink]="'/user/change-password'" *ngIf="currentUserLinkedSocials"> Change Password </div> -->
+        <div mat-line class="hand" [routerLink]="'/mfa/change-password'"> Change Password </div>
+        <mat-icon mat-icon svgIcon="lockIcon"></mat-icon>
+        <mat-divider></mat-divider>
+      </mat-list-item>
+      <mat-list-item>
+        <div mat-line class="hand" (click)="unRegister()" *ngIf="currentUserLinkedSocials"> Unregister Account </div>
+        <div mat-line class="hand" [routerLink]="'/mfa/unregister-password'" *ngIf="!currentUserLinkedSocials"> Unregister Account </div>
+        <mat-divider></mat-divider>
+      </mat-list-item>
+
+      <ng-container *ngIf="currentUserLinkedSocials?.length > 0 ">
+
+        <div mat-subheader>Linked Accounts</div>
+
+        <ng-container *ngFor="let social of currentUserLinkedSocials | sortBy:'asc':'platform'">
+
+          <mat-list-item>
+
+            <div mat-line> {{ social.platform | titlecase }} </div>
+
+            <mat-icon mat-list-icon svgIcon="{{ social.platform == 'FACEBOOK' ? 'facebookIcon' : 'googleIcon' }}"></mat-icon>
+
+            <div mat-line-end class="linked-account-name">
+              {{ currentUser?.profile.firstName + ' ' + currentUser.profile.lastName }}
+            </div>
+
+            <mat-icon mat-icon svgIcon="linkedIcon" class="unlink-icon hand" (click)="unlinkAccount(social.platform)"></mat-icon>
+
+            <mat-divider></mat-divider>
+
+          </mat-list-item>
+
+          <!-- <mat-list-item *ngIf="social.platform == 'facebook' || social.platform == 'FACEBOOK' && currentUser?.profile.FacebookID">
+
+            <div mat-line> {{ social.platform | titlecase }} </div>
+
+            <mat-icon mat-list-icon svgIcon="facebookIcon"></mat-icon>
+
+            <div mat-line-end class="linked-account-name">
+              {{ currentUser?.profile.firstName + ' ' + currentUser.profile.lastName }}
+            </div>
+
+            <mat-icon mat-icon svgIcon="linkedIcon" class="unlink-icon hand" (click)="unlinkAccount(social.platform)"></mat-icon>
+            <mat-divider></mat-divider>
+
+          </mat-list-item>
+
+          <mat-list-item *ngIf="social.platform == 'google' || social.platform == 'GOOGLE' && currentUser?.profile.GoogleID">
+
+            <div mat-line> {{ social.platform | titlecase }} </div>
+
+            <mat-icon mat-list-icon svgIcon="googleIcon"></mat-icon>
+
+            <div mat-line-end class="linked-account-name">
+              {{ currentUser?.profile.firstName + ' ' + currentUser?.profile.lastName }}
+            </div>
+
+            <mat-icon mat-icon svgIcon="linkedIcon" class="unlink-icon hand" (click)="unlinkAccount(social.platform)"></mat-icon>
+            <mat-divider></mat-divider>
+
+          </mat-list-item> -->
+
+        </ng-container>
+
+      </ng-container>
+
+      <mat-list-item>
+        <div mat-line (click)="logOut()" class="hand">Log out </div>
+        <mat-icon mat-icon svgIcon="doorIcon"></mat-icon>
+        <mat-divider></mat-divider>
+      </mat-list-item>
+
+    </mat-list>
+
+  </mat-card-content>
+
+</mat-card>
+
+<swal #unregister imageUrl="{{ alertConfirmLink }}">
+
+  <div *swalPortal="swalTargets.title">
+    <p> Unregister </p>
+  </div>
+  <div *swalPortal="swalTargets.content">
+    <div class="mb-1">
+      <p> Are you sure you want to <br> unregister your account? </p>
+    </div>
+    <button class="custom-swal-confirm-button" mat-raised-button (click)="confirmUnregister()">
+      <span >Yes</span>
+    </button>
+    <button class="btn-block cancel-btn custom-swal-dismiss-button" mat-raised-button (click)="unregister.dismiss()">
+      <span>Cancel</span>
+    </button>
+  </div>
+
+</swal>
+
+<swal #logout imageUrl="{{ alertConfirmLink }}">
+
+  <div *swalPortal="swalTargets.title">
+    <p> Log out </p>
+  </div>
+  <div *swalPortal="swalTargets.content">
+    <div class="mb-1">
+      <p> Are you sure <br> you want to logout </p>
+    </div>
+    <button class="custom-swal-confirm-button" mat-raised-button (click)="confirmLogout()">
+      <span >Yes</span>
+    </button>
+    <button class="btn-block cancel-btn custom-swal-dismiss-button" mat-raised-button (click)="logout.dismiss()">
+      <span>Cancel</span>
+    </button>
+  </div>
+
+</swal>
+
+<swal #unlinkSocial imageUrl="{{ alertConfirmLink }}">
+
+  <div *swalPortal="swalTargets.title">
+    <b> Unlink {{ unlinkAccountType }} ?</b>
+  </div>
+
+  <div *swalPortal="swalTargets.content">
+
+    <button mat-raised-button class="custom-swal-confirm-button" (click)="confirmUnlink()">
+      <span>Unlink</span>
+    </button>
+    <br>
+    <button mat-raised-button class="btn-block cancel-btn custom-swal-dismiss-button" (click)="unlinkSocial.dismiss()">
+      <span>Cancel</span>
+    </button>
+
+  </div>
+
+</swal>

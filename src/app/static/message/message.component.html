@@ -1,0 +1,63 @@
+<button mat-icon-button class="close-button" [mat-dialog-close]="true">
+  <mat-icon class="close-icon">close</mat-icon>
+</button>
+
+<h1 mat-dialog-title>Login to <span class="brand">GetGo</span></h1>
+
+<div class="error-message" *ngIf="this.hasError">
+  <span>Incorrect email/password.</span>
+</div>
+
+<mat-dialog-content class="modal-container">
+  <form [formGroup]="messageFormGroup" (ngSubmit)="loginSubmit()">
+    <mat-form-field class="d-block" appearance="outline">
+      <mat-label>E-mail</mat-label>
+      <input matInput type="text" formControlName="username">
+      <mat-icon matSuffix svgIcon="inputEmail"></mat-icon>
+
+      <div *ngIf="isValidInput('username')" class="alert alert-danger">
+        <div *ngIf="messageFormGroup.controls['username'].errors.required">
+          Email is required
+        </div>
+        <div *ngIf="messageFormGroup.controls['username'].errors.pattern">
+          Must be a valid email format
+        </div>
+      </div>
+    </mat-form-field>
+
+    <mat-form-field class="d-block password-field" appearance="outline">
+      <mat-label>Password</mat-label>
+      <input matInput [type]="hide ? 'password' : 'text'" formControlName="password">
+      <mat-icon matSuffix (click)="hide = !hide">{{hide ? 'visibility_off' : 'visibility'}}</mat-icon>
+
+      <div *ngIf="isValidInput('password')" class="alert alert-danger">
+        <div *ngIf="messageFormGroup.controls['password'].errors.required">
+          Password is required
+        </div>
+      </div>
+    </mat-form-field>
+
+    <div class="account-login">
+      <button mat-raised-button
+        class="btn btn-warning"
+        (click)="loginWithGetgo()"
+        [disabled]="!messageFormGroup.valid"
+        type="submit">
+        <span class="login-text">Sign In</span>
+      </button>
+    </div>
+
+    <div class="action-wrapper">
+      <div class="forgot-password">
+        <a class="forgot-password-text" href="https://www.getgo.com.ph/member/forgot-password" target="_blank">Forgot password</a>
+      </div>
+
+      <div class="account-signup">
+        <span>New to GetGo?&nbsp;</span><a href="https://www.getgo.com.ph/member/quick-enroll-login#" target="_blank" class="btn-block signup-btn">Sign Up Here</a>
+      </div>
+    </div>
+  </form>
+</mat-dialog-content>
+
+
+
