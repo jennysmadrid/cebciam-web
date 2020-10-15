@@ -9,6 +9,10 @@
     "lint": "ng lint",
     "e2e": "ng e2e"
   },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/jennysmadrid/cebciam-web.git"
+  },
   "private": true,
   "dependencies": {
     "@angular/animations": "~9.1.9",
@@ -59,6 +63,6 @@
     "typescript": "~3.8.3"
   },
   "publishConfig": {
-    "registry": "https://npm.pkg.github.com"
+    "registry": "https://github.com/jennysmadrid"
   }
 }
