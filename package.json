@@ -1,6 +1,6 @@
 {
-  "name": "ciam",
-  "version": "0.0.0",
+  "name": "@app/core",
+  "version": "1.0.0",
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
@@ -11,7 +11,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/jennysmadrid/cebciam-web.git"
+    "url": "git+https://github.com/jennysmadrid/cebciam-web.git"
   },
   "private": true,
   "dependencies": {
@@ -43,7 +43,6 @@
     "zone.js": "~0.10.2"
   },
   "devDependencies": {
-    "@app/core": "1.0.0",
     "@angular-devkit/build-angular": "~0.901.7",
     "@angular/cli": "~9.1.7",
     "@angular/compiler-cli": "~9.1.9",
@@ -65,5 +64,14 @@
   },
   "publishConfig": {
     "registry": "https://github.com/jennysmadrid"
-  }
+  },
+  "description": "This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 9.1.7.",
+  "bugs": {
+    "url": "https://github.com/jennysmadrid/cebciam-web/issues"
+  },
+  "homepage": "https://github.com/jennysmadrid/cebciam-web#readme",
+  "main": "karma.conf.js",
+  "keywords": [],
+  "author": "jennelynmadrid",
+  "license": "ISC"
 }
