@@ -109,7 +109,7 @@ export class OtpComponent implements OnInit {
       baseUrl, null, { headers }).subscribe(response => {
         if (response.message == "Success.") {
           Swal.fire({
-            title: "Okta ID: " + response.data.userId + "\nMember ID: " + response.data.memberId,
+            title: "Okta ID: " + response.data.userId + "\nLoyalty ID: " + response.data.memberId,
             text: '',
             icon: 'success',
             showCancelButton: false,
@@ -137,7 +137,7 @@ export class OtpComponent implements OnInit {
                 } else if (result.isDismissed) {
                   window.location.href = '/';
                 }
-            })          }        } else {
+            })          }        } else if (error.error.message.toLowerCase().indexOf('locked') !== -1) {
           Swal.fire({
             text: 'Your GetGo account is currently locked out. Try again after 60 minutes.',
             icon: 'error',
@@ -145,6 +145,15 @@ export class OtpComponent implements OnInit {
             confirmButtonText: 'Ok'
           }).then((result) => {
              window.location.href = '/';
+          })
+        } else {
+          Swal.fire({
+            text: 'Your session has expired. Please try to login again.',
+            icon: 'warning',
+            showCancelButton: false,
+            confirmButtonText: 'Ok'
+          }).then((result) => {
+            window.location.href = '/';
           })
         }
     });
