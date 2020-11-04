@@ -186,11 +186,8 @@ input[type=number] {
   border-radius: .25rem;
 }
 
-.timer {
+.timer, .expiry {
   color: #6E6E6E;
-  &.error-message {
-    padding: 0.10rem .75rem !important;
-  }
 }
 
 

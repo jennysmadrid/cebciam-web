@@ -27,12 +27,12 @@
         </div>
       </div>
     </mat-form-field>
+
     <mat-form-field class="d-block password-field" appearance="outline">
       <mat-label>Password</mat-label>
       <input matInput [type]="hide ? 'password' : 'text'" formControlName="password">
       <mat-icon matSuffix (click)="hide = !hide">{{hide ? 'visibility_off' : 'visibility'
     }}</mat-icon>
-
     <div *ngIf="isValidInput('password')" class="alert alert-danger">
       <div *ngIf="messageFormGroup.controls['password'].errors.required">
         Password is required
@@ -59,8 +59,9 @@
         <span>New to GetGo?&nbsp;</span><a href="https://www.getgo.com.ph/member/quick-enroll-login?tab=1" target="_blank" class="btn-block signup-btn">Sign Up Here</a>
       </div>
     </div>
-    </form>
-    </mat-dialog-content>
+
+  </form>
+</mat-dialog-content>
 
 
 

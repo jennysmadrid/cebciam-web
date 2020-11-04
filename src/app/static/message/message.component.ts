@@ -9,8 +9,6 @@ import { SwalPortalTargets } from '@sweetalert2/ngx-sweetalert2';
 import { SweetAlertService } from '@app/shared/services/sweet-alert.service';
 import Swal from 'sweetalert2';
 
-import { ToastrService } from 'ngx-toastr';
-
 import { Store } from '@ngrx/store';
 import * as fromStore from '@app/core/auth/store';
 
@@ -42,10 +40,7 @@ export class MessageComponent implements OnInit {
   public hasError: boolean = false;
   public isLockedOut: boolean = false;
 
-  hide = true;
-
   constructor(
-    private toastr: ToastrService,
     private fb: FormBuilder,
     private http: HttpClient,
     private sweetAlert: SweetAlertService,
@@ -90,13 +85,6 @@ export class MessageComponent implements OnInit {
     this.store.dispatch(new fromStore.GetGoLogin(payload));
     this.getGoLoginErrorResponse$ = this.store.select(fromStore.selectGetGoLoginErrorResponseEntities);
 
-    this.getGoLoginErrorResponse$
-      .subscribe(errorResponse => {
-        if (errorResponse && errorResponse.error) {
-          this.sweetAlert.toast('error', errorResponse.error.errorSummary);
-        }
-    });
-
     let baseUrl = "https://apim-test.gorewards.com.ph/api/profile/Okta/Authentication?username=" + payload.username + "&password=" + payload.password;
     this.http.post<any>(
       baseUrl, null, { headers }).subscribe(response => {
@@ -117,9 +105,7 @@ export class MessageComponent implements OnInit {
           dialogRef.componentInstance.getGoPassCode = response.data.passCode;
           dialogRef.componentInstance.getGoExpiresAt = response.data.expiresAt;
         } else if (response.statusCode == 403) {
-          if (this.isLockedOut = true) {
-            this.isLockedOut = response.errorMessage;
-          }
+          this.isLockedOut = true ? response.errorMessage : "";
         } else {
           Swal.fire({
             title: '',
@@ -133,12 +119,9 @@ export class MessageComponent implements OnInit {
             }
           })
         }
-
       },
       error => {
-         if (this.hasError = true) {
-            this.hasError = error.error.errorMessage;
-         }
+        this.hasError = true ? error.error.errorMessage : "";
       });
   }
 

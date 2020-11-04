@@ -88,8 +88,6 @@ export class OtpComponent implements OnInit {
     let baseUrl = "https://apim-dev.gorewards.com.ph/api/profile/Okta/VerifyOTP?stateToken=" + this.getGoStateToken + "&factorId=" + this.getGoFactorId + "&passCode=" + passCode;
     this.http.post<any>(
       baseUrl, null, { headers }).subscribe(response => {
-        this.getGoExpiresAt = response.data.expiresAt;
-
         if (response.message == "Success.") {
           Swal.fire({
             title: "Verified!",
@@ -106,9 +104,8 @@ export class OtpComponent implements OnInit {
           console.log(response.data);
         }
       },
-        error => {
-          if (error.error.data == "E0000068") {            this.otpCounter += 1;            if (this.hasError = true) {              this.hasError = error.error.errorMessage;
-            }            if (this.otpCounter >= 3) {              this.otpCounter = 0;              Swal.fire({
+      error => {
+          if (error.error.data == "E0000068") {            this.otpCounter += 1;            this.hasError = true ? error.error.errorMessage : "";            if (this.otpCounter >= 3) {              this.otpCounter = 0;              Swal.fire({
                 title: 'Do you want to Resend an OTP?',
                 text: 'You will receive a One-Time Password (OTP) on your email.',
                 icon: 'error',
@@ -121,7 +118,7 @@ export class OtpComponent implements OnInit {
                 } else if (result.isDismissed) {
                   window.location.href = '/';
                 }
-              })            }          } else if (error.error.data == "E0000069") { //User Locked
+              })            }          } else if (error.error.data == "E0000069") { 
             Swal.fire({
               text: error.error.errorMessage,
               icon: 'error',
@@ -130,7 +127,7 @@ export class OtpComponent implements OnInit {
             }).then((result) => {
               window.location.href = '/';
             })
-          } else if (error.error.data == "E0000011") { //Invalid Token Provided
+          } else if (error.error.data == "E0000011") { 
             Swal.fire({
               text: error.error.errorMessage,
               icon: 'warning',
@@ -140,10 +137,10 @@ export class OtpComponent implements OnInit {
               window.location.href = '/';
             })
           }
-        });
+    });
   }
 
-  runOTPTimer() {
+  expiryOtp() {
     let now = new Date;
     let newDate = new Date(this.getGoExpiresAt);
 
@@ -154,6 +151,13 @@ export class OtpComponent implements OnInit {
       newDate.getUTCHours(), newDate.getUTCMinutes(), newDate.getUTCSeconds(), newDate.getUTCMilliseconds());
 
     this.expiresAt = (this.expiryDate - this.currentDate) / 1000;
+  }
+
+  m(o) {
+    o = Number(o);
+    var m = Math.floor(o % 3600 / 58);
+    var mDisplay = m > 0 ? m + (m == 1 ? " minutes " : " minutes ") : "";
+    return mDisplay;
   }
 
   resendOtp() {
@@ -179,7 +183,7 @@ export class OtpComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.runOTPTimer();
+    this.expiryOtp();
 
     this.timer = interval(1000)
       .pipe(
@@ -192,7 +196,6 @@ export class OtpComponent implements OnInit {
           this.ispause.next;
         }
         this.time -= 1;
-        /*this.expiresAt -= 1;*/
       }
     };
     this.timer.subscribe(this.timerObserver);
@@ -206,13 +209,6 @@ export class OtpComponent implements OnInit {
     var mDisplay = m > 0 ? m + (m == 1 ? "m " : "m ") : "";
     var sDisplay = s > 0 ? s + (s == 1 ? " " : "s") : "";
     return mDisplay + sDisplay;
-  }
-
-  otpExpiry(o) {
-    o = Number(o);
-    var m = Math.floor(o % 3600 / 60);
-    var mDisplay = m > 0 ? m + (m == 1 ? " minutes " : " minutes ") : "";
-    return mDisplay;
   }
 
   onSubmit() {
