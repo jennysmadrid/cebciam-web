@@ -1,6 +1,7 @@
 $dark-gray: #6E6E6E;
 $lighter-gray: #CCCCCC;
 $violet: #744eb5;
+$white: #FFFFFF;
 
 mat-card-header {
   width: 100%;
@@ -65,12 +66,11 @@ mat-card-header {
       width: 80%;
       border-radius: 10px;
       background: $violet;
-      color: #fff;
+      color: $white;
       justify-content: center;
       display: flex;
       cursor: pointer;
       font-size: 16px;
-      // display: none;
       &[disabled] {
         background: $lighter-gray;
         cursor: default;
@@ -83,10 +83,14 @@ mat-card-header {
       border: 0;
       margin: 5px auto;
       color: $violet;
-      margin: 5px auto;
+      margin: 5px auto 0;
       cursor: pointer;
       border: 0;
       outline: 0;
+
+      p {
+          margin: 0px auto 3px;
+      }
 
       &[disabled] {
         color: $lighter-gray;
@@ -98,6 +102,12 @@ mat-card-header {
     span {
       &.validate {
         margin-top: 10px;
+      }
+
+      &.timer {
+          font-size: 10px;
+          margin: 0;
+          padding: 0;
       }
     }
   }
@@ -134,12 +144,12 @@ mat-card-header {
   right: -18px;
 
   &:active, &:focus, &:hover {
-    background: #fff;
+    background: $white;
   }
 
   .close-icon {
     transition: 1s ease-in-out;
-    background: #fff;
+    background: $white;
 
     &:hover {
       transform: rotate(180deg);
@@ -171,12 +181,18 @@ input[type=number] {
   background: #f8c6bf;
   font-size: 0.857em;
   color: #721c24;
-  background-color: #f8d7da;
-  border-color: #f5c6cb;
   padding: .75rem 1.25rem;
   border: 1px solid transparent;
   border-radius: .25rem;
 }
+
+.timer {
+  color: #6E6E6E;
+  &.error-message {
+    padding: 0.10rem .75rem !important;
+  }
+}
+
 
 
 

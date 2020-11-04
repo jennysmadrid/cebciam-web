@@ -1,6 +1,6 @@
 import { Component, OnInit, ViewChildren, ViewChild, ChangeDetectorRef, AfterViewChecked, AfterViewInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { HttpClient, HttpHeaders, HttpResponse } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 import { interval, Observable, timer, Subject, PartialObserver } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 
@@ -23,31 +23,27 @@ import * as fromStore from '@app/core/auth/store';
 export class OtpComponent implements OnInit {
   otp: string;
   showOtpComponent = true;
+
   @ViewChild('ngOtpInput', { static: false }) ngOtpInput: any;
-  config = {
-    allowNumbersOnly: true,
-    length: 5,
-    isPasswordInput: false,
-    disableAutoFocus: false,
-    placeholder: '',
-    inputStyles: {
-      'width': '50px',
-      'height': '50px'
-    }
-  };
 
   public getGoFactorId;
   public getGoStateToken;
   public getGoPassCode;
-  private otpCounter: number = 0;
+  public getGoExpiresAt;
+  public currentDate;
+  public expiryDate;
   public hasError: boolean = false;
+  public messageFormGroup: FormGroup;
+  private otpCounter: number = 0;
 
+  expiresAt = 0;
   time = 59;
   subscribeTimer: any;
   ispause = new Subject();
   timer: Observable<number>;
   timerObserver: PartialObserver<number>;
-  title = 'otp';
+
+  title = 'One-Time Password';
   otpFormGroup: FormGroup;
   formInput = ['input1', 'input2', 'input3', 'input4', 'input5', 'input6'];
 
@@ -71,18 +67,6 @@ export class OtpComponent implements OnInit {
     return new FormGroup(group);
   }
 
-  keyUpEvent(event, index) {
-    let pos = index; 
-    if (event.keyCode === 8 && event.which === 8) {
-      pos = index - 1;
-    } else {
-      pos = index + 1;
-    }
-    if (pos > -1 && pos < this.formInput.length) {
-      this.rows._results[pos].nativeElement.focus();
-    }
-  }
-
   onKeyUp(event, index) {
     if (index < 5) {
       let elem: HTMLInputElement;
@@ -94,7 +78,6 @@ export class OtpComponent implements OnInit {
 
   verifyOtp() {
     this.sweetAlert.toast('info', 'Processing..');
-
     const headers = { 'Content-Type': 'application/x-www-form-urlencoded' }
 
     let passCode: string = '';
@@ -102,14 +85,14 @@ export class OtpComponent implements OnInit {
       passCode += this.otpFormGroup.get('input' + i).value;
     }
 
-    Swal.fire("Factor ID: " + this.getGoFactorId + "\nState Token: " + this.getGoStateToken + "\nPass Code: " + passCode);
-
     let baseUrl = "https://apim-dev.gorewards.com.ph/api/profile/Okta/VerifyOTP?stateToken=" + this.getGoStateToken + "&factorId=" + this.getGoFactorId + "&passCode=" + passCode;
     this.http.post<any>(
       baseUrl, null, { headers }).subscribe(response => {
+        this.getGoExpiresAt = response.data.expiresAt;
+
         if (response.message == "Success.") {
           Swal.fire({
-            title: "Okta ID: " + response.data.userId + "\nLoyalty ID: " + response.data.memberId,
+            title: "Verified!",
             text: '',
             icon: 'success',
             showCancelButton: false,
@@ -120,66 +103,84 @@ export class OtpComponent implements OnInit {
             }
           })
         } else {
-          console.log("Invalid Token Provided");
+          console.log(response.data);
         }
       },
-      error => {
-        if (error.error.message.toLowerCase().indexOf('invalid passcode') !== -1) {          this.otpCounter += 1;          this.hasError = true;          if (this.otpCounter >= 3) {            this.otpCounter = 0;            Swal.fire({
-               title: 'Do you want to Resend an OTP?',
-               text: 'You will receive a One-Time Password (OTP) on your email.',
-               icon: 'error',
-               showCancelButton: true,
-               confirmButtonText: 'Resend OTP',
-               cancelButtonText: 'Back to Login',
-            }).then((result) => {
+        error => {
+          if (error.error.data == "E0000068") {            this.otpCounter += 1;            if (this.hasError = true) {              this.hasError = error.error.errorMessage;
+            }            if (this.otpCounter >= 3) {              this.otpCounter = 0;              Swal.fire({
+                title: 'Do you want to Resend an OTP?',
+                text: 'You will receive a One-Time Password (OTP) on your email.',
+                icon: 'error',
+                showCancelButton: true,
+                confirmButtonText: 'Resend OTP',
+                cancelButtonText: 'Back to Login',
+              }).then((result) => {
                 if (result.isConfirmed) {
                   this.resendOtp();
                 } else if (result.isDismissed) {
                   window.location.href = '/';
                 }
-            })          }        } else if (error.error.message.toLowerCase().indexOf('locked') !== -1) {
-          Swal.fire({
-            text: 'Your GetGo account is currently locked out. Try again after 60 minutes.',
-            icon: 'error',
-            showCancelButton: false,
-            confirmButtonText: 'Ok'
-          }).then((result) => {
-             window.location.href = '/';
-          })
-        } else {
-          Swal.fire({
-            text: 'Your session has expired. Please try to login again.',
-            icon: 'warning',
-            showCancelButton: false,
-            confirmButtonText: 'Ok'
-          }).then((result) => {
-            window.location.href = '/';
-          })
-        }
-    });
+              })            }          } else if (error.error.data == "E0000069") { //User Locked
+            Swal.fire({
+              text: error.error.errorMessage,
+              icon: 'error',
+              showCancelButton: false,
+              confirmButtonText: 'Ok'
+            }).then((result) => {
+              window.location.href = '/';
+            })
+          } else if (error.error.data == "E0000011") { //Invalid Token Provided
+            Swal.fire({
+              text: error.error.errorMessage,
+              icon: 'warning',
+              showCancelButton: false,
+              confirmButtonText: 'Ok'
+            }).then((result) => {
+              window.location.href = '/';
+            })
+          }
+        });
+  }
+
+  runOTPTimer() {
+    let now = new Date;
+    let newDate = new Date(this.getGoExpiresAt);
+
+    this.currentDate = Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate(),
+      now.getUTCHours(), now.getUTCMinutes(), now.getUTCSeconds(), now.getUTCMilliseconds());
+
+    this.expiryDate = Date.UTC(newDate.getUTCFullYear(), newDate.getUTCMonth(), newDate.getUTCDate(),
+      newDate.getUTCHours(), newDate.getUTCMinutes(), newDate.getUTCSeconds(), newDate.getUTCMilliseconds());
+
+    this.expiresAt = (this.expiryDate - this.currentDate) / 1000;
   }
 
   resendOtp() {
     this.sweetAlert.toast('info', 'Processing..');
     const headers = { 'Content-Type': 'application/x-www-form-urlencoded' }
 
-    Swal.fire("Factor ID: " + this.getGoFactorId + "\nState Token: " + this.getGoStateToken);
-
     let baseUrl = "https://apim-dev.gorewards.com.ph/api/profile/Okta/SendOTP?stateToken=" + this.getGoStateToken + "&factorId=" + this.getGoFactorId;
     this.http.post<any>(
       baseUrl, null, { headers }).subscribe(response => {
         if (response.message == "Success.") {
           console.log("Success");
+          this.time = 59;
+          this.expiresAt = (this.expiryDate - this.currentDate) / 1000;
+
+
         } else {
           console.log("Invalid Token Provided");
         }
       },
-      error => {
-        console.log(error.error.message);
-    });
-  } 
+        error => {
+          console.log(error.error.message);
+        });
+  }
 
   ngOnInit(): void {
+    this.runOTPTimer();
+
     this.timer = interval(1000)
       .pipe(
         takeUntil(this.ispause)
@@ -191,51 +192,34 @@ export class OtpComponent implements OnInit {
           this.ispause.next;
         }
         this.time -= 1;
-        }
-      };
+        /*this.expiresAt -= 1;*/
+      }
+    };
     this.timer.subscribe(this.timerObserver);
   }
+
 
   secondsToHms(d) {
     d = Number(d);
     var m = Math.floor(d % 3600 / 60);
     var s = Math.floor(d % 3600 % 60);
-    var mDisplay = m > 0 ? m + (m == 1 ? ": " : " : ") : "";
-    var sDisplay = s > 0 ? s + (s == 1 ? "" : "") : "0";
+    var mDisplay = m > 0 ? m + (m == 1 ? "m " : "m ") : "";
+    var sDisplay = s > 0 ? s + (s == 1 ? " " : "s") : "";
     return mDisplay + sDisplay;
+  }
+
+  otpExpiry(o) {
+    o = Number(o);
+    var m = Math.floor(o % 3600 / 60);
+    var mDisplay = m > 0 ? m + (m == 1 ? " minutes " : " minutes ") : "";
+    return mDisplay;
   }
 
   onSubmit() {
     this.otpFormGroup.reset();
   }
 
-  ngAfterViewChecked() {
-    this.cd.detectChanges();
-  }
-
-  onOtpChange(otp) {
-    this.otp = otp;
-  }
-
   setVal(val) {
     this.ngOtpInput.setValue(val);
-  }
-
-  toggleDisable() {
-    if (this.ngOtpInput.otpForm) {
-      if (this.ngOtpInput.otpForm.disabled) {
-        this.ngOtpInput.otpForm.enable();
-      } else {
-        this.ngOtpInput.otpForm.disable();
-      }
-    }
-  }
-
-  onConfigChange() {
-    this.showOtpComponent = false;
-    this.otp = null;
-    setTimeout(() => {
-      this.showOtpComponent = true;
-    }, 0);
   }
 }

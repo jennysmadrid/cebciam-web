@@ -5,56 +5,5 @@
 html, body { height: 100%; }
 body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
 
-.toast-top-center {
-  position: relative;
-  left: 0;
-  right: 0;
-  z-index: 9995;
-  border: 1px solid transparent;
-  border-radius: 8px;
-  width: 500px;
-  margin: 350px auto 0;
-}
-
-.toast-class {
-  background-color: whitesmoke;
-  text-align: center;
-  font-family: Verdana, Geneva, Tahoma, sans-serif;
-  font-size: 1rem;
-  border: 1px solid #eee;
-  padding: 10px;
-}
-
-.toast-error {
-  color: #721c24;
-  background-color: #f8d7da;
-  border-color: #f5c6cb;
-}
-
-.toast-success {
-  background-color: lightsteelblue;
-}
-
-.toast-warning {
-  background-color: lightyellow;
-}
-
-.toast-title {
-  font-weight: bold;
-}
-
-.mat-form-field-wrapper {
-  padding-bottom: 0.90em;
-}
-
-.mat-dialog-container {
-  padding: 20px 24px !important;
-}
-
-.swal2-title {
-  font-size: 14px !important;
-  line-height: 25px !important;
-}
-
 @import './themes/style.scss';
 

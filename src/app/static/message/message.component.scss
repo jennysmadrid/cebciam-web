@@ -1,5 +1,6 @@
 $violet: #744eb5;
 $orange: #e84a36;
+$white: #ffffff;
 
 h1 {
   margin: 0 0 10px;
@@ -36,7 +37,7 @@ span {
       width: 100%;
       border-radius: 10px;
       background: $violet;
-      color: #fff;
+      color: $white;
       margin: 5px auto 0;
       justify-content: center;
       display: flex;
@@ -100,12 +101,12 @@ span {
   right: -18px;
 
    &:active, &:focus, &:hover {
-     background: #fff;
+     background: $white;
    }
 
   .close-icon {
     transition: 1s ease-in-out;
-    background: #fff;
+    background: $white;
 
     &:hover {
       transform: rotate(180deg);
@@ -121,8 +122,6 @@ span {
   background: #f8c6bf;
   font-size: 0.857em;
   color: #721c24;
-  background-color: #f8d7da;
-  border-color: #f5c6cb;
   padding: .75rem 1.25rem;
   border: 1px solid transparent;
   border-radius: .25rem;

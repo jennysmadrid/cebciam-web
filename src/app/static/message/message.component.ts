@@ -1,5 +1,5 @@
 import { Component, OnInit, Inject, Injectable, OnDestroy } from '@angular/core';
-import { HttpClient, HttpHeaders, HttpResponse } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 import { MatDialogRef, MAT_DIALOG_DATA, MatDialog } from '@angular/material/dialog';
 import { FormGroup, FormControl, FormBuilder, Validators } from '@angular/forms';
 import { Observable, Subject, of, throwError } from 'rxjs';
@@ -28,17 +28,19 @@ import { OtpComponent } from '../otp/otp.component';
   styleUrls: ['./message.component.scss']
 })
 
-export class MessageComponent implements OnInit, OnDestroy {
+export class MessageComponent implements OnInit {
 
   public getGoFactorId: "";
   public getGoStateToken: "";
   public getGoPassCode: "";
+  public getGoExpiresAt: "";
 
   public messageFormGroup: FormGroup;
   public getGoLoginErrorResponse$: Observable<any>;
   public destroy$ = new Subject();
 
   public hasError: boolean = false;
+  public isLockedOut: boolean = false;
 
   hide = true;
 
@@ -73,21 +75,14 @@ export class MessageComponent implements OnInit, OnDestroy {
     }, { updateOn: 'change' })
   }
 
-  formControl(control): FormControl {
-    return this.messageFormGroup.get(control) as FormControl;
-  }
-
   isValidInput(fieldName): boolean {
     return this.messageFormGroup.controls[fieldName].invalid &&
       (this.messageFormGroup.controls[fieldName].dirty || this.messageFormGroup.controls[fieldName].touched);
   }
 
-  ngOnDestroy() {
-    this.destroy$.next();
-    this.destroy$.complete();
-  }
-
   loginWithGetgo() {
+    this.hasError = false;
+    this.isLockedOut = false;
     this.sweetAlert.toast('info', 'Verifying Credentials');
     const payload: any = this.messageFormGroup.value;
     const headers = { 'Content-Type': 'application/x-www-form-urlencoded' }
@@ -102,24 +97,16 @@ export class MessageComponent implements OnInit, OnDestroy {
         }
     });
 
-
     let baseUrl = "https://apim-test.gorewards.com.ph/api/profile/Okta/Authentication?username=" + payload.username + "&password=" + payload.password;
     this.http.post<any>(
       baseUrl, null, { headers }).subscribe(response => {
         this.hasError = false;
-        Swal.fire({
-          title: "Status: " + response.data.status + "\nFactor ID: " + response.data.factorId + "\nState Token: " + response.data.stateToken,
-          icon: 'success',
-          confirmButtonText: 'Ok',
-        }).then((result) => {
-          if (result.isConfirmed) {
-            OtpComponent;
-          }
-        });
+
         if (response.data.status == "MFA_CHALLENGE") {
           this.getGoFactorId = response.data.factorId;
           this.getGoStateToken = response.data.stateToken;
           this.getGoPassCode = response.data.passCode;
+          this.getGoExpiresAt = response.data.expiresAt;
 
           let dialogRef = this.dialog.open(OtpComponent, {
             disableClose: true,
@@ -128,10 +115,15 @@ export class MessageComponent implements OnInit, OnDestroy {
           dialogRef.componentInstance.getGoFactorId = response.data.factorId;
           dialogRef.componentInstance.getGoStateToken = response.data.stateToken;
           dialogRef.componentInstance.getGoPassCode = response.data.passCode;
+          dialogRef.componentInstance.getGoExpiresAt = response.data.expiresAt;
+        } else if (response.statusCode == 403) {
+          if (this.isLockedOut = true) {
+            this.isLockedOut = response.errorMessage;
+          }
         } else {
           Swal.fire({
             title: '',
-            text: "Okta ID: " + response.data.userId,
+            text: "Verified!",
             icon: 'success',
             showCancelButton: false,
             confirmButtonText: 'Ok',
@@ -141,11 +133,12 @@ export class MessageComponent implements OnInit, OnDestroy {
             }
           })
         }
+
       },
       error => {
-        //this.dialog.open(OtpComponent);
-        //this.toastr.error(error.error.message);
-        this.hasError = true;
+         if (this.hasError = true) {
+            this.hasError = error.error.errorMessage;
+         }
       });
   }
 

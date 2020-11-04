@@ -5,7 +5,11 @@
 <h1 mat-dialog-title>Login to <span class="brand">GetGo</span></h1>
 
 <div class="error-message" *ngIf="this.hasError">
-  <span>Incorrect email/password.</span>
+  <span>{{hasError}}</span>
+</div>
+
+<div class="error-message" *ngIf="this.isLockedOut">
+  <span>{{isLockedOut}}</span>
 </div>
 
 <mat-dialog-content class="modal-container">
@@ -14,7 +18,6 @@
       <mat-label>E-mail</mat-label>
       <input matInput type="text" formControlName="username">
       <mat-icon matSuffix svgIcon="inputEmail"></mat-icon>
-
       <div *ngIf="isValidInput('username')" class="alert alert-danger">
         <div *ngIf="messageFormGroup.controls['username'].errors.required">
           Email is required
@@ -24,25 +27,25 @@
         </div>
       </div>
     </mat-form-field>
-
     <mat-form-field class="d-block password-field" appearance="outline">
       <mat-label>Password</mat-label>
       <input matInput [type]="hide ? 'password' : 'text'" formControlName="password">
-      <mat-icon matSuffix (click)="hide = !hide">{{hide ? 'visibility_off' : 'visibility'}}</mat-icon>
+      <mat-icon matSuffix (click)="hide = !hide">{{hide ? 'visibility_off' : 'visibility'
+    }}</mat-icon>
 
-      <div *ngIf="isValidInput('password')" class="alert alert-danger">
-        <div *ngIf="messageFormGroup.controls['password'].errors.required">
-          Password is required
-        </div>
+    <div *ngIf="isValidInput('password')" class="alert alert-danger">
+      <div *ngIf="messageFormGroup.controls['password'].errors.required">
+        Password is required
       </div>
+    </div>
     </mat-form-field>
 
     <div class="account-login">
       <button mat-raised-button
-        class="btn btn-warning"
-        (click)="loginWithGetgo()"
-        [disabled]="!messageFormGroup.valid"
-        type="submit">
+              class="btn btn-warning"
+              (click)="loginWithGetgo()"
+              [disabled]="!messageFormGroup.valid"
+              type="submit">
         <span class="login-text">Sign In</span>
       </button>
     </div>
@@ -53,11 +56,11 @@
       </div>
 
       <div class="account-signup">
-        <span>New to GetGo?&nbsp;</span><a href="https://www.getgo.com.ph/member/quick-enroll-login#" target="_blank" class="btn-block signup-btn">Sign Up Here</a>
+        <span>New to GetGo?&nbsp;</span><a href="https://www.getgo.com.ph/member/quick-enroll-login?tab=1" target="_blank" class="btn-block signup-btn">Sign Up Here</a>
       </div>
     </div>
-  </form>
-</mat-dialog-content>
+    </form>
+    </mat-dialog-content>
 
 
 
